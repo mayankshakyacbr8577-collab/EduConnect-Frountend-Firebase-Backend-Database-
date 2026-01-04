@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EduConnect — Student Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+:root{--accent:#7c3aed}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Georgia,"Times New Roman",serif;
+  background:
+    linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.85)),
+    url("Project.jpeg");
+  background-size:cover;
+  background-attachment:fixed;
+  color:#f1f5f9;
+}
+section{display:none}
+
+/* NAV */
+.top-nav{
+  position:fixed;top:0;left:0;right:0;height:64px;
+  background:rgba(10,15,30,.6);
+  backdrop-filter:blur(12px);
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 24px;z-index:100;
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{width:36px}
+.top-nav button{
+  background:transparent;border:1px solid rgba(255,255,255,.3);
+  color:#fff;padding:6px 14px;border-radius:999px;cursor:pointer
+}
+.primary{background:linear-gradient(90deg,var(--accent),#06b6d4);border:none;color:#021025}
+.logout{background:#dc2626;border:none}
+
+/* HOME */
+.hero{
+  min-height:100vh;padding-top:90px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center
+}
+.hero-logo{
+  width:90px;
+  margin-bottom:14px;
+}
+.hero h1{font-size:54px;margin:0}
+.hero span{color:#a78bfa}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;max-width:800px;margin-top:30px}
+.stat-card{background:rgba(15,23,42,.85);padding:20px;border-radius:18px}
+
+/* AUTH */
+.center{min-height:100vh;padding-top:90px;display:flex;align-items:center;justify-content:center}
+.auth-card{width:420px;background:rgba(15,23,42,.95);padding:40px;border-radius:20px;text-align:center}
+.auth-logo{
+  width:70px;
+  margin-bottom:10px;
+}
+.auth-card h2{margin-top:5px}
+.auth-card input{
+  width:100%;padding:12px;margin-bottom:14px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.2);background:#020617;color:#fff
+}
+.auth-card button{
+  width:100%;padding:12px;border-radius:12px;border:none;
+  background:linear-gradient(90deg,var(--accent),#06b6d4);cursor:pointer
+}
+
+/* DASHBOARD */
+.container{max-width:1200px;margin:auto;padding:100px 40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px}
+.course{
+  background:rgba(255,255,255,.07);padding:16px;border-radius:20px;
+  cursor:pointer;transition:.3s
+}
+.course:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.6)}
+.course img{width:100%;height:160px;object-fit:cover;border-radius:14px}
+
+/* TEAM */
+.team-section{margin-top:80px}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px}
+.team-card{background:rgba(15,23,42,.9);padding:20px;border-radius:18px;text-align:center}
+.team-avatar{width:90px;height:90px;border-radius:50%;overflow:hidden;margin:auto;border:2px solid #38bdf8}
+.team-avatar img{width:100%;height:100%;object-fit:cover}
+.team-card a{
+  display:inline-block;margin-top:10px;padding:8px 16px;
+  border-radius:999px;text-decoration:none;
+  background:linear-gradient(90deg,var(--accent),#06b6d4);
+  color:#021025;
+}
+
+/* COURSE MODAL */
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.85);
+  display:none;align-items:center;justify-content:center;z-index:200
+}
+.modal-card{
+  width:90%;max-width:800px;background:#020617;
+  padding:30px;border-radius:20px
+}
+.progress{height:14px;background:#1e293b;border-radius:999px;overflow:hidden}
+.progress div{height:100%;background:linear-gradient(90deg,#22c55e,#4ade80);width:0%}
+</style>
+</head>
+
+<body>
+
+<div class="top-nav">
+  <div class="brand">
+    <img src="logo.jpg"><b>EduConnect</b>
+  </div>
+  <div>
+    <button onclick="showHome()">Home</button>
+    <button onclick="showLogin()">Login</button>
+    <button onclick="showRegister()">Register</button>
+    <button id="dashBtn" class="primary" onclick="showDashboard()" style="display:none">Dashboard</button>
+    <button id="logoutBtn" class="logout" onclick="logout()" style="display:none">Logout</button>
+  </div>
+</div>
+
+<!-- HOME -->
+<section id="home">
+<div class="hero">
+  <img src="logo.jpg" class="hero-logo">
+  <h1><span>Edu</span>Connect</h1>
+  <div class="stats">
+    <div class="stat-card"><h2 id="s1">0</h2><p>Students</p></div>
+    <div class="stat-card"><h2 id="s2">0</h2><p>Courses</p></div>
+    <div class="stat-card"><h2 id="s3">0</h2><p>Live / Week</p></div>
+  </div>
+</div>
+</section>
+
+<!-- LOGIN -->
+<section id="login">
+<div class="center">
+<div class="auth-card">
+<img src="logo.jpg" class="auth-logo">
+<h2>Student Login</h2>
+<input id="loginEmail" placeholder="Email">
+<input id="loginPass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+</div>
+</section>
+
+<!-- REGISTER -->
+<section id="register">
+<div class="center">
+<div class="auth-card">
+<img src="logo.jpg" class="auth-logo">
+<h2>Create Account</h2>
+<input id="rName" placeholder="Full Name">
+<input id="rEmail" placeholder="Email">
+<input id="rPass" type="password" placeholder="Password">
+<button onclick="registerUser()">Register</button>
+</div>
+</div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard">
+<div class="container">
+<h2>Dashboard</h2>
+
+<h3>Courses</h3>
+<div class="grid" id="courseGrid"></div>
+
+<h3 style="margin-top:60px">👤 Our Core Team</h3>
+<div class="team-grid">
+  <div class="team-card">
+    <div class="team-avatar"><img src="SACHIN.jpg"></div>
+    <h3>Sachin Kumar</h3>
+    <a href="https://port-folio-maker-user-end.vercel.app/portfolio/SACHIN_0984" target="_blank">View Portfolio</a>
+  </div>
+  <div class="team-card">
+    <div class="team-avatar"><img src="MS.jpg"></div>
+    <h3>Mayank Shakya</h3>
+    <a href="https://port-folio-maker-user-end.vercel.app/portfolio/mayank_8577" target="_blank">View Portfolio</a>
+  </div>
+  <div class="team-card">
+    <div class="team-avatar"><img src="JUNAID.jpeg"></div>
+    <h3>Mohd Junaid</h3>
+    <a href="https://port-folio-maker-user-end.vercel.app/portfolio/Junaid" target="_blank">View Portfolio</a>
+  </div>
+  <div class="team-card">
+    <div class="team-avatar"><img src="NAVIKANT.jpg"></div>
+    <h3>NaviKant</h3>
+    <a href="https://port-folio-maker-user-end.vercel.app/portfolio/Navikant21" target="_blank">View Portfolio</a>
+  </div>
+</div>
+
+</div>
+</section>
+
+<!-- MODAL -->
+<div class="modal" id="courseModal">
+<div class="modal-card">
+<h2 id="cTitle"></h2>
+<p id="cDesc"></p>
+<p><b>Duration:</b> <span id="cDuration"></span></p>
+<p><b>Price:</b> ₹<span id="cPrice"></span></p>
+<h4>Progress</h4>
+<div class="progress"><div id="cProgress"></div></div>
+<br>
+<button class="primary" onclick="enroll()">Enroll / Continue</button>
+<button onclick="closeCourse()">Close</button>
+</div>
+</div>
+
+<script>
+const home=document.getElementById("home"),
+loginP=document.getElementById("login"),
+registerP=document.getElementById("register"),
+dashboard=document.getElementById("dashboard");
+const dashBtn = document.getElementById("dashBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+
+function hideAll(){home.style.display=loginP.style.display=registerP.style.display=dashboard.style.display="none"}
+function showHome(){hideAll();home.style.display="block"}
+function showLogin(){hideAll();loginP.style.display="block"}
+function showRegister(){hideAll();registerP.style.display="block"}
+function showDashboard(){hideAll();dashboard.style.display="block"}
+showHome();
+
+/* COUNTERS */
+["s1","s2","s3"].forEach((id,i)=>{
+  let c=0,max=[1200,4,15][i];
+  setInterval(()=>{if(c<max)document.getElementById(id).innerText=++c},20)
+});
+
+/* AUTH */
+function registerUser(){
+  const name = rName.value;
+  const email = rEmail.value;
+  const pass = rPass.value;
+  if(!name || !email || !pass){
+    alert("Sab fields bharo");
+    return;
+  }
+  const key = email.replace(".", "_");
+
+  set(ref(database, "users/" + key), {
+    name: name,
+    email: email,
+    password: pass
+  })
+  .then(()=>{
+    alert("Registration successful (Firebase)");
+    showLogin();
+  })
+  .catch(err=>{
+    alert("Error: " + err.message);
+  });
+}
+function login(){
+  const email = loginEmail.value;
+  const pass = loginPass.value;
+
+  if(!email || !pass){
+    alert("Enter the Email and Password here ");
+    return;
+  }
+
+  const key = email.replace(".", "_");
+
+  get(ref(database, "users/" + key))
+  .then(snapshot=>{
+    if(snapshot.exists()){
+      if(snapshot.val().password === pass){
+        alert("Login successful (Firebase)");
+        dashBtn.style.display = logoutBtn.style.display = "inline-block";
+        showDashboard();
+        loadCourses();
+      }else{
+        alert("Wrong Password");
+      }
+    }else{
+      alert(" Not Find User, register First  ");
+    }
+  })
+  .catch(err=>{
+    alert("Error: " + err.message);
+  });
+}
+
+
+function logout(){dashBtn.style.display=logoutBtn.style.display="none";showHome()}
+
+/* COURSES */
+const courses=[
+{title:"Web Development",desc:"HTML CSS JS",duration:"6 Months",price:4999,img:"MAYANK.jpg",progress:0},
+{title:"Data Science",desc:"Python & ML",duration:"8 Months",price:6999,img:"DS.jpg",progress:0},
+{title:"Graphic Design",desc:"UI & Tools",duration:"4 Months",price:3999,img:"GD.jpg",progress:0},
+{title:"Digital Marketing",desc:"SEO & Ads",duration:"5 Months",price:4499,img:"DMC.jpg",progress:0}
+];
+let current=null;
+
+function loadCourses(){
+  courseGrid.innerHTML="";
+  courses.forEach((c,i)=>{
+    courseGrid.innerHTML+=`
+    <div class="course" onclick="openCourse(${i})">
+      <img src="${c.img}">
+      <h3>${c.title}</h3>
+    </div>`;
+  });
+}
+function openCourse(i){
+  current=courses[i];
+  cTitle.innerText=current.title;
+  cDesc.innerText=current.desc;
+  cDuration.innerText=current.duration;
+  cPrice.innerText=current.price;
+  cProgress.style.width=current.progress+"%";
+  courseModal.style.display="flex";
+}
+function enroll(){
+  if(current.progress<100)current.progress+=20;
+  cProgress.style.width=current.progress+"%";
+}
+function closeCourse(){courseModal.style.display="none"}
+</script>
+<script type="module">
+  // Firebase SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyC5a4-RrOi7pW00FbDZ7fDwl_NVRj3qNvY",
+    authDomain: "educonnect-f6995.firebaseapp.com",
+    databaseURL: "https://educonnect-f6995-default-rtdb.firebaseio.com",
+    projectId: "educonnect-f6995",
+    storageBucket: "educonnect-f6995.appspot.com",
+    messagingSenderId: "264409528564",
+    appId: "1:264409528564:web:9278ef4c4ef5b92f7386a1"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  // 🔹 database ko global bana do
+  window.database = database;
+  window.ref = ref;
+  window.set = set;
+  window.get = get;
+</script>
+
+</body>
+</html>
